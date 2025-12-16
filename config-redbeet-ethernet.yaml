@@ -24,8 +24,8 @@ active_modules:
       token_provider:
       - module_id: token_provider_1
         implementation_id: main
-      - module_id: token_provider_rfid
-        implementation_id: main
+      #- module_id: token_provider_rfid
+      #  implementation_id: main
       token_validator:
       - module_id: token_validator
         implementation_id: main
@@ -114,30 +114,26 @@ active_modules:
     config_implementation:
       main:
         device: eth0
-        evse_id: PIONIX_SAYS_HELLO
+        #evse_id: PIONIX_SAYS_HELLO
         #nid: pionix!
         number_of_sounds: 10
     connections: {}
     module: EvseSlac
-  token_provider_1:
-    config_implementation:
-      main:
-        timeout: 10
-        token: DEADBEEF
-        type: RFID
-    connections:
-      evse:
-      - implementation_id: evse
-        module_id: evse_manager
-    module: DummyTokenProvider
-  #token_provider_rfid:
-  #   config_implementation:
+  #token_provider_1:
+  #  config_implementation:
+  #    main:
+  #      timeout: 10
+  #      token: DEADBEEF
+  #      #type: RFID
+  #  connections:
+  #    evse:
+  #    - implementation_id: evse
+  #      module_id: evse_manager
   #     main:
   #       serial_port: /dev/ttyAMA5
   #   connections: {}
   #   module: PN532TokenProvider
   #token_validator:
-  #  config_implementation:
   #    main:
   #      sleep: 0.25
   #      validation_reason: Token seems valid
@@ -148,13 +144,11 @@ active_modules:
   #  telemetry:
   #    id: 1
   #  config_module:
-  #    baud_rate: 115200
-  #    reset_gpio: 27
   #    serial_port: /dev/ttyAMA0
   #  connections: {}
   #  module: YetiDriver
   #
-  token_provider_rfid:
+  token_provider_1:
     module: DummyTokenProvider
     config_implementation:
       main:
