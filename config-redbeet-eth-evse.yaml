@@ -86,7 +86,6 @@ active_modules:
       device: eth0
       tls_security: prohibit
       supported_DIN70121: false
-    connections: {}
     module: EvseV2G
     connections:
       security:
