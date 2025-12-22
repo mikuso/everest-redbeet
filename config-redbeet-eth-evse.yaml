@@ -15,23 +15,60 @@ active_modules:
     config_implementation:
       error_history:
         database_path: /tmp/error_history.db
+  #auth:
+  #  module: Auth
+  #  config_module:
+  #    connection_timeout: 60
+  #    selection_algorithm: PlugEvents
+  #  connections:
+  #    token_provider:
+  #    - module_id: token_provider_1
+  #      implementation_id: main
+  #    #- module_id: token_provider_rfid
+  #    #  implementation_id: main
+  #    token_validator:
+  #    - module_id: token_validator
+  #      implementation_id: main
+  #    evse_manager:
+  #    - module_id: evse_manager
+  #      implementation_id: evse
+
   auth:
     module: Auth
     config_module:
-      connection_timeout: 60
-      selection_algorithm: PlugEvents
+      connection_timeout: 10
+      selection_algorithm: FindFirst
     connections:
       token_provider:
-      - module_id: token_provider_1
-        implementation_id: main
-      #- module_id: token_provider_rfid
-      #  implementation_id: main
+        - module_id: token_provider
+          implementation_id: main
       token_validator:
-      - module_id: token_validator
-        implementation_id: main
+        - module_id: token_validator
+          implementation_id: main
       evse_manager:
-      - module_id: evse_manager
-        implementation_id: evse
+        - module_id: evse_manager
+          implementation_id: evse
+  token_provider:
+    module: DummyTokenProvider
+    config_implementation:
+      main:
+        token: TOKEN1
+    connections:
+      evse:
+        - module_id: evse_manager
+          implementation_id: evse
+  token_validator:
+    module: DummyTokenValidator
+    config_implementation:
+      main:
+        validation_result: Accepted
+        validation_reason: Token seems valid
+        sleep: 0.25
+  evse_security:
+    module: EvseSecurity
+    config_module:
+      private_key_password: "123456"
+
   energy_manager:
     connections:
       energy_trunk:
@@ -40,22 +77,23 @@ active_modules:
     module: EnergyManager
   evse_manager:
     config_module:
-      ac_enforce_hlc: false
-      ac_hlc_enabled: true
-      ac_hlc_use_5percent: true
-      ac_nominal_voltage: 230
-      ac_with_soc: false
-      charge_mode: AC
-      dbg_hlc_auth_after_tstep: false
-      ev_receipt_required: false
-      #evse_id: DE*PNX*E123456*1
-      has_ventilation: true
-      payment_enable_contract: false
-      payment_enable_eim: true
-      session_logging: true
-      session_logging_path: /tmp/logs
-      session_logging_xml: false
       connector_id: 1
+      evse_id: DE*PNX*E123456*1
+      session_logging: true
+      session_logging_path: /tmp/everest-logs
+      session_logging_xml: false
+      charge_mode: AC
+      hack_allow_bpt_with_iso2: true
+      #ac_enforce_hlc: false
+      #ac_hlc_enabled: true
+      #ac_hlc_use_5percent: true
+      #ac_nominal_voltage: 230
+      #ac_with_soc: false
+      #dbg_hlc_auth_after_tstep: false
+      #ev_receipt_required: false
+      #has_ventilation: false 
+      #payment_enable_contract: false
+      #payment_enable_eim: true
     connections:
       bsp:
       - implementation_id: board_support
@@ -91,10 +129,10 @@ active_modules:
       security:
         - module_id: evse_security
           implementation_id: main
-  evse_security:
-    module: EvseSecurity
-    config_module:
-      private_key_password: "123456"
+  #evse_security:
+  #  module: EvseSecurity
+  #  config_module:
+  #    private_key_password: "123456"
   persistent_store:
     module: PersistentStore
     config_module:
@@ -148,27 +186,22 @@ active_modules:
   #  connections: {}
   #  module: YetiDriver
   #
-  token_provider_1:
-    module: DummyTokenProvider
-    config_implementation:
-      main:
-        token: TOKEN1
-    connections:
-      evse:
-        - module_id: evse_manager
-          implementation_id: evse
-  token_validator:
-    module: DummyTokenValidator
-    config_implementation:
-      main:
-        validation_result: Accepted
-        validation_reason: Token seems valid
-        sleep: 0.25
-  evse_security:
-    module: EvseSecurity
-    config_module:
-      private_key_password: "123456"
-
+  #token_provider_1:
+  #  module: DummyTokenProvider
+  #  config_implementation:
+  #    main:
+  #      token: TOKEN1
+  #  connections:
+  #    evse:
+  #      - module_id: evse_manager
+  #        implementation_id: evse
+  #token_validator:
+  #  module: DummyTokenValidator
+  #  config_implementation:
+  #    main:
+  #      validation_result: Accepted
+  #      validation_reason: Token seems valid
+  #      sleep: 0.25
   yeti_driver:
     module: YetiSimulator
     config_module:
